@@ -6,9 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- bootstarp-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Coba Login</title>
+    <title>Login</title>
 </head>
 <body>
+    
+    <h3 class="mb-5">Silahkan login</h3>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -24,9 +26,7 @@
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
               <div class="card shadow-2-strong" style="border-radius: 1rem;">
                 <div class="card-body p-5">
-      
-                  <h3 class="mb-5">Sign in</h3>
-      
+
                   <form action="{{ route('login') }}" method="post">
                     <div class="form-group">
                       <label for="email">Email address</label>
