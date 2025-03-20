@@ -9,23 +9,38 @@ class AdminController extends Controller
 {
     //
     function index()
-    {
-        return view('admin');
+    { 
+        $data = [
+            'title' => 'Halaman Dashboard'
+        ];
+        return view('admin', $data);
     }
     function superadmin()
     {
-        return view('admin');
+        $data = [
+            'title' => 'Halaman Dashboard'
+        ];  
+        return view('admin', $data);
     }
     function admin()
     {
-        return view('admin');
+        $data = [
+            'title' => 'Halaman Dashboard'
+        ];  
+        return view('admin', $data);
     }
     function petani()
     {
-        return view('admin');
+        $data = [
+            'title' => 'Halaman Dashboard'
+        ];  
+        return view('admin', $data);
     }
     function pembeli()
     {
-        return view('admin');
+        $data = [
+            'title' => 'Halaman Dashboard'
+        ];  
+        return view('admin', $data);
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('jumlah_padi');
             $table->string('latitude');
             $table->string('longitude');
-            $table->string('foto_padi');
+            $table->string('foto_padi')->nullable();
             $table->timestamps();
         });
     }

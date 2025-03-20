@@ -48,14 +48,14 @@ class DataPadiController extends Controller
             ], 422);
         }
 
-         if ($request->hasFile('foto_padi') && $request->file('foto_padi')->isValid()) {
+        if ($request->hasFile('foto_padi') && $request->file('foto_padi')->isValid()) {
             $file = $request->file('foto_padi'); 
             $fileName = now()->format('Y-m-d_H-i-s') . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
             $path   = 'images/petani/datapadi/fotopadi/'.$fileName;
             Storage::disk('public')->put($path, file_get_contents($file));
-         } else {
+        } else {
              $fileName = 'default.png';
-         }
+        }
 
          $datapadi = DataPadi::create([
             'nama' => $request->nama,
@@ -116,22 +116,17 @@ class DataPadiController extends Controller
         if ($request->hasFile('foto_padi') && $request->file('foto_padi')->isValid()) {
             $file = $request->file('foto_padi');
 
-            // Buat nama file unik
             $fileName = now()->format('Y-m-d_H-i-s') . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
             $path = 'images/petani/datapadi/fotopadi/'.$fileName;
 
-            // Hapus gambar lama jika bukan default.png
             if ($datapadi->foto_padi && $datapadi->foto_padi !== 'default.png') {
                 Storage::disk('public')->delete('images/petani/datapadi/fotopadi/'.$datapadi->foto_padi);
             }
 
-            // Simpan gambar baru
             Storage::disk('public')->put($path, file_get_contents($file));
 
-            // Simpan nama file baru ke dalam database
             $datapadi->foto_padi = $fileName;
         } else {
-            // Jika tidak ada file baru, gunakan gambar lama atau default.png
             $datapadi->foto_padi = $datapadi->foto_padi ?? 'default.png';
         }
 
@@ -156,8 +151,8 @@ class DataPadiController extends Controller
     public function destroy(string $id)
     {
         //
-        $datapadi = DataPadi::findOrFail($id);
-
+        $datapadi = DataPadi::where('id', $id)->first();
+        
         if (!empty($datapadi->foto_padi) && $datapadi->foto_padi !== 'default.png') {
             $filePath = 'images/petani/datapadi/fotopadi/' . $datapadi->foto_padi;
             Storage::disk('public')->delete($filePath);
