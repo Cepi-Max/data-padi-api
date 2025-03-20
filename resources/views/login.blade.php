@@ -15,17 +15,17 @@
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                        <h5 class="mb-5 text-center">Silahkan login</h5>
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $item)
-                                        <li>{{ $item }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
                         <div class="card-body p-5">
+                            <h5 class="mb-5 text-center">Silahkan login</h5>
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $item)
+                                            <li>{{ $item }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
                   <form action="{{ route('login') }}" method="post">
                     <div class="form-group">
