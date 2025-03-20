@@ -10,17 +10,17 @@
 </head>
 <body>
     
-    <h3 class="mb-5">Silahkan login</h3>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $item)
-                    <li>{{ $item }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <section class="vh-100" style="background-color: #508bfc;">
+        <h3 class="mb-5">Silahkan login</h3>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $item)
+                        <li>{{ $item }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
