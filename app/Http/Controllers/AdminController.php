@@ -13,7 +13,7 @@ class AdminController extends Controller
         $data = [
             'title' => 'Halaman Dashboard'
         ];
-        return view('admin', $data);
+        return view('admin.dashboard.index', $data);
     }
     function superadmin()
     {

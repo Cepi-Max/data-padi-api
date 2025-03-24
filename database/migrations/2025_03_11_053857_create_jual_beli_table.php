@@ -22,7 +22,9 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('order_code')->unique();
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'paid', 'shipped', 'delivered', 'canceled'])->default('pending');
+            $table->boolean('is_cod')->default(false); 
+            $table->boolean('is_paid')->default(false); 
+            $table->enum('status', ['pending', 'shipped', 'delivered', 'completed', 'canceled'])->default('pending');
             $table->timestamps();
         });
 
@@ -41,7 +43,7 @@ return new class extends Migration {
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('payment_method', ['bank transfer', 'e-wallet', 'cod']);
-            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->enum('payment_status', ['unpaid', 'pending', 'paid', 'failed', 'refunded', 'cancelled'])->default('unpaid');
             $table->string('transaction_id')->nullable();
             $table->decimal('amount', 10, 2);
             $table->timestamps();

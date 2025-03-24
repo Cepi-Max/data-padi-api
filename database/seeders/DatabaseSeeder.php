@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
             'user_id' => $user->id,
             'order_code' => 'ORD-' . strtoupper(Str::random(8)),
             'total_price' => ($product1->price * 2) + ($product2->price * 1),
-            'status' => 'paid',
+            'status' => 'pending',
         ]);
 
         // 4. Seed Order Items
@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
             'order_id' => $order->id,
             'user_id' => $user->id,
             'payment_method' => 'bank transfer',
-            'payment_status' => 'paid',
+            'payment_status' => 'pending',
             'transaction_id' => 'TRX-' . strtoupper(Str::random(8)),
             'amount' => $order->total_price,
         ]);

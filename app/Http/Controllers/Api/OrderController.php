@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
-    // List all orders
     public function index()
     {
         $orderdata = Order::all();
@@ -24,7 +23,6 @@ class OrderController extends Controller
         ], 200);
     }
 
-    // Create new order
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -64,7 +62,6 @@ class OrderController extends Controller
         return response()->json(['message' => 'Order created', 'order' => $order], 201);
     }
 
-    // Get order details
     public function show($id)
     {
         $order = Order::with('orderItems.product')->find($id);
@@ -74,57 +71,84 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
-    // Update pesanan kalo status pending saja
     public function update(Request $request, $id)
     {
-        $order = Order::where('id', $id)->where('status', 'pending')->first();
+        $order = Order::findOrFail($id);
 
-        if (!$order) {
-            return response()->json(['error' => 'Order sedang diproses, tidak dapat diubah'], 400);
+        // kalo request hanya update status
+        if ($request->has('status') && !$request->has('items')) {
+            $validator = Validator::make($request->all(), [
+                'status' => 'required|in:pending,paid,shipped,delivered,cancelled'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 422);
+            }
+
+            $order->update(['status' => $request->status]);
+
+            return response()->json(['message' => 'Status pesanan berhasil diperbarui', 'order' => $order], 200);
+        }
+
+        if ($order->status !== 'pending') {
+            return response()->json(['error' => 'Pesanan sudah diproses, tidak dapat mengubah item'], 400);
         }
 
         $validator = Validator::make($request->all(), [
             'items' => 'required|array',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1'
+            'items.*.quantity' => 'required|integer|min:1',
+            'status' => 'nullable|in:pending,paid,shipped,delivered,cancelled'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        // Hapus order_items lama
         OrderItem::where('order_id', $id)->delete();
 
         $total_price = 0;
         foreach ($request->items as $item) {
             $product = Product::find($item['product_id']);
-            $total_price += $product->price * $item['quantity'];
+            $subtotal = $product->price * $item['quantity'];
+            $total_price += $subtotal;
 
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
                 'price' => $product->price,
-                'subtotal' => $product->price * $item['quantity']
+                'subtotal' => $subtotal,
             ]);
         }
 
-        $order->update(['total_price' => $total_price]);
+        // Total harga ya bos
+        $order->total_price = $total_price;
+        if ($request->has('status')) {
+            $order->status = $request->status;
+        }
+        $order->save();
 
         return response()->json(['message' => 'Order berhasil diperbarui', 'order' => $order], 200);
     }
 
+
     public function destroy(string $id)
     {
-        //
         $dataorder = Order::findOrFail($id);
+
+        if (in_array($dataorder->status, ['paid', 'shipped', 'delivered'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Pesanan tidak dapat dihapus karena sudah diproses atau sedang dikirim.'
+            ], 403);
+        }
 
         $dataorder->delete();
 
         return response()->json([
             'status' => true,
-            'message' => 'data berhasil dihapus'
+            'message' => 'Data berhasil dihapus.'
         ], 200);
     }
 

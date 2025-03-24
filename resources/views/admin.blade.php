@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
   <div class="bg-white container-sm col-6 border my-3 rounded px-5 py-3 pb-5">
@@ -21,5 +21,6 @@
         @endif
       </ul>
     </div>
+  </div>
 
 @endsection

@@ -28,6 +28,7 @@
                             @endif
 
                   <form action="{{ route('login') }}" method="post">
+                    @csrf
                     <div class="form-group">
                       <label for="email">Email address</label>
                       <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
