@@ -21,19 +21,26 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        // Cek pakai Auth::attempt
+        // Cek Auth
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            
+
             /** @var \App\Models\User $user */
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->wantsJson() || $request->is('api/*')) {
+                // Generate Token Sanctum
                 $token = $user->createToken('mobile_token')->plainTextToken;
+
                 return response()->json([
                     'message' => 'Login berhasil',
                     'role' => $user->role,
                     'token' => $token,
-                    'user' => $user
-                ]);
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'role' => $user->role,
+                    ]
+                ], 200);
             }
 
             // Kalau dari WEB (redirect by role)
@@ -51,7 +58,8 @@ class AuthController extends Controller
                     return redirect('/login')->withErrors('Role tidak dikenali');
             }
         } else {
-            if ($request->expectsJson()) {
+            // Jika gagal login
+            if ($request->expectsJson() || $request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'Email atau password salah'], 401);
             }
 
@@ -61,10 +69,25 @@ class AuthController extends Controller
         }
     }
 
-
-    function logout()
+    public function logout(Request $request)
     {
+        if ($request->expectsJson() || $request->wantsJson() || $request->is('api/*')) {
+            // Hapus token Sanctum
+            $request->user()->currentAccessToken()->delete();
+
+            return response()->json(['message' => 'Logout berhasil'], 200);
+        }
+
+        // Logout Web biasa
         Auth::logout();
-        return redirect()->route('login.show');
+        return redirect('/login')->with('message', 'Logout berhasil');
     }
+
+
+
+    // function logout()
+    // {
+    //     Auth::logout();
+    //     return redirect()->route('login.show');
+    // }
 }
