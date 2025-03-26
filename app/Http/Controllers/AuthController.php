@@ -21,13 +21,12 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        // Cek Auth
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
             /** @var \App\Models\User $user */
             if ($request->expectsJson() || $request->wantsJson() || $request->is('api/*')) {
-                // Generate Token Sanctum
+                
                 $token = $user->createToken('mobile_token')->plainTextToken;
 
                 return response()->json([
@@ -43,7 +42,6 @@ class AuthController extends Controller
                 ], 200);
             }
 
-            // Kalau dari WEB (redirect by role)
             switch ($user->role) {
                 case 'superadmin':
                     return redirect('admin/superadmin');
@@ -54,11 +52,10 @@ class AuthController extends Controller
                 case 'pembeli':
                     return redirect('admin/pembeli');
                 default:
-                    Auth::logout(); // Role nggak dikenal, logout
+                    Auth::logout(); 
                     return redirect('/login')->withErrors('Role tidak dikenali');
             }
         } else {
-            // Jika gagal login
             if ($request->expectsJson() || $request->wantsJson() || $request->is('api/*')) {
                 return response()->json(['message' => 'Email atau password salah'], 401);
             }
