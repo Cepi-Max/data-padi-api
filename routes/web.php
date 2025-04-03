@@ -21,8 +21,12 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware(['guest'])->group(function(){
+    // Login
     Route::get('/login', [AuthController::class, 'index'])->name('login.show');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
+    // Register
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register.show');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -52,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Product Route 
-        Route::prefix('products')->name('admin.products.')->group(function () {
+        Route::prefix('admin/products')->name('admin.products.')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('index');
             Route::get('/create', [ProductController::class, 'create'])->name('create');
             Route::post('/store', [ProductController::class, 'store'])->name('store');
@@ -73,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/pembeli', [AdminController::class, 'pembeli'])->name('show.welcome.pembeli');
 
         // Product Route 
-        Route::prefix('products')->name('pembeli.products.')->group(function () {
+        Route::prefix('pembeli/products')->name('pembeli.products.')->group(function () {
             Route::get('/', [ProductListController::class, 'productlist'])->name('index');
             // Route::get('/create', [ProductListController::class, 'create'])->name('create'); 
         });

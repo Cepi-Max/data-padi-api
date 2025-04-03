@@ -26,7 +26,11 @@
                                     </ul>
                                 </div>
                             @endif
-
+                            @if(session('success'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                   <form action="{{ route('login') }}" method="post">
                     @csrf
                     <div class="form-group">
@@ -38,9 +42,8 @@
                       <label for="password">Password</label>
                       <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                     </div>
-                    <div class="form-group form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    <div>
+                      <span>Belum Terdaftar?</span><a href="{{ route('register.show') }}">daftar</a>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </form>
