@@ -123,12 +123,4 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('/login')->with('message', 'Logout berhasil');
     }
-
-
-
-    // function logout()
-    // {
-    //     Auth::logout();
-    //     return redirect()->route('login.show');
-    // }
 }
