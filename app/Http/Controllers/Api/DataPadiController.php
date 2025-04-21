@@ -59,7 +59,7 @@ class DataPadiController extends Controller
              $fileName = 'default.png';
         }
 
-        $id_author = Auth::id();
+        $id_author = auth()->user()->id;
 
          $datapadi = DataPadi::create([
             'nama' => $request->nama,
@@ -137,7 +137,7 @@ class DataPadiController extends Controller
             $datapadi->foto_padi = $datapadi->foto_padi ?? 'default.png';
         }
 
-        $id_author = Auth::id();
+        $id_author = auth()->user()->id;
 
         $datapadi->update([
             'nama' => $request->nama,
