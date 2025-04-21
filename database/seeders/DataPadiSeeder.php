@@ -17,6 +17,7 @@ class DataPadiSeeder extends Seeder
             [
                 'nama' => 'Padi Rias',
                 'jumlah_padi' => '200',
+                'jenis_padi' => 'Padi Cianjur',
                 'latitude' => '19002322',
                 'longitude' => '876456456',
                 'foto_padi' => null,
@@ -24,6 +25,7 @@ class DataPadiSeeder extends Seeder
             [
                 'nama' => 'Padi Cianjur',
                 'jumlah_padi' => '900',
+                'jenis_padi' => 'Padi Bangka',
                 'latitude' => '19002322',
                 'longitude' => '876456456',
                 'foto_padi' => null,
