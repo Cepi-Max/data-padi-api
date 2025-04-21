@@ -38,14 +38,36 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        // Khusus Midtrns
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('payment_status')->default('pending');
+            $table->timestamps();
+        });
+
+        // Pembayaran selain midtrans
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('payment_method', ['bank transfer', 'e-wallet', 'cod']);
-            $table->enum('payment_status', ['unpaid', 'pending', 'paid', 'failed', 'refunded', 'cancelled'])->default('unpaid');
+            $table->string('payment_status')->default('pending');
             $table->string('transaction_id')->nullable();
             $table->decimal('amount', 10, 2);
+            $table->timestamps();
+        });
+
+        Schema::create('payment_methods', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+        
+        Schema::create('product_payment_methods', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('payment_method_id')->constrained('payment_methods')->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -84,6 +106,7 @@ return new class extends Migration {
         // Schema::dropIfExists('discounts');
         Schema::dropIfExists('reviews');
         Schema::dropIfExists('shipments');
+        Schema::dropIfExists('transactions');
         Schema::dropIfExists('payments');
         Schema::dropIfExists('order_items');
         Schema::dropIfExists('orders');

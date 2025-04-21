@@ -2,15 +2,22 @@
 
 use App\Http\Controllers\Api\DataPadiController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 // Yang lebih profesional
 // Route default user login check
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Webhook dari midtrans
+Route::prefix('v1')->name('api.midtrans.')->group(function() {
+Route::post('/midtrans/webhook', [PaymentController::class, 'handleWebhook']);
 });
 
 // Auth Routes
@@ -28,6 +35,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(function() 
     Route::apiResource('product', ProductController::class);
     
     Route::apiResource('order', OrderController::class);
+    
+    // Route::post('/pay', [PaymentController::class, 'pay']);
+    Route::post('/checkout', [PaymentController::class, 'checkout']);
 }); 
 
 // Route::get('/user', function (Request $request) {

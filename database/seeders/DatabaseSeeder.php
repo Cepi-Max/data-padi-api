@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DataPadiSeeder::class,
             ProductSeeder::class,
+            PaymentMethodSeeder::class,
         ]);
         $user = User::create([
             'name' => 'Mas Pembeli',
@@ -79,7 +80,6 @@ class DatabaseSeeder extends Seeder
         Payment::create([
             'order_id' => $order->id,
             'user_id' => $user->id,
-            'payment_method' => 'bank transfer',
             'payment_status' => 'pending',
             'transaction_id' => 'TRX-' . strtoupper(Str::random(8)),
             'amount' => $order->total_price,
