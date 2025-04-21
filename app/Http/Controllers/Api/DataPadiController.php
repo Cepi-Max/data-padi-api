@@ -60,7 +60,6 @@ class DataPadiController extends Controller
         }
 
         $id_author = auth()->user()->id;
-        dd($id_author);
 
          $datapadi = DataPadi::create([
             'nama' => $request->nama,
