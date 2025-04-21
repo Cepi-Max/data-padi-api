@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\DataPadi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -58,6 +59,8 @@ class DataPadiController extends Controller
              $fileName = 'default.png';
         }
 
+        $id_author = Auth::id();
+
          $datapadi = DataPadi::create([
             'nama' => $request->nama,
             'jumlah_padi' => $request->jumlah_padi,
@@ -65,6 +68,7 @@ class DataPadiController extends Controller
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'foto_padi' => $fileName,
+            'id_author' => $id_author,
         ]);
               
 
@@ -133,12 +137,16 @@ class DataPadiController extends Controller
             $datapadi->foto_padi = $datapadi->foto_padi ?? 'default.png';
         }
 
+        $id_author = Auth::id();
+
         $datapadi->update([
             'nama' => $request->nama,
             'jumlah_padi' => $request->jumlah_padi,
             'jenis_padi' => $request->jenis_padi,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
+            'foto_padi' => $fileName,
+            'id_author' => $id_author,
         ]);
         
 
