@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone_number')->nullable();
+            $table->string('lokasi');
             $table->enum('role',['superadmin', 'admin', 'petani', 'pembeli'])->default('pembeli');
             $table->string('foto_profil')->nullable();
             $table->rememberToken();

@@ -38,6 +38,7 @@ class AuthController extends Controller
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
+                        'lokasi' => $user->lokasi,
                         'role' => $user->role,
                     ]
                 ], 200);
@@ -78,6 +79,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'lokasi' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -91,6 +93,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'lokasi' => $request->lokasi,
         ]);
 
         if ($request->expectsJson() || $request->wantsJson() || $request->is('api/*')) {
@@ -102,6 +105,7 @@ class AuthController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'lokasi' => $user->lokasi,
                 ]
             ], 201);
         }
