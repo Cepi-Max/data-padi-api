@@ -35,6 +35,7 @@ class DataPadiController extends Controller
         $validator = Validator::make($request->all(),[
             'nama' => 'required',
             'jumlah_padi' => 'required',
+            'jenis_padi' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
             'foto_padi' => 'required|extensions:jpg,png',
@@ -60,6 +61,7 @@ class DataPadiController extends Controller
          $datapadi = DataPadi::create([
             'nama' => $request->nama,
             'jumlah_padi' => $request->jumlah_padi,
+            'jenis_padi' => $request->jenis_padi,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'foto_padi' => $fileName,
@@ -98,6 +100,7 @@ class DataPadiController extends Controller
         $validator = Validator::make($request->all(),[
             'nama' => 'required',
             'jumlah_padi' => 'required',
+            'jenis_padi' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
             'foto_padi' => 'nullable|mimes:jpg,png',
@@ -133,6 +136,7 @@ class DataPadiController extends Controller
         $datapadi->update([
             'nama' => $request->nama,
             'jumlah_padi' => $request->jumlah_padi,
+            'jenis_padi' => $request->jenis_padi,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
         ]);
