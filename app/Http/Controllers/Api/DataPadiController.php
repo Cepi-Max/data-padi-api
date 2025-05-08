@@ -15,14 +15,37 @@ class DataPadiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $datapadi = DataPadi::all();
-         
+        // Ambil dari request, kalau tidak ada pakai bulan & tahun sekarang
+        $bulan = $request->input('bulan', now()->month);
+        $tahun = $request->input('tahun', now()->year);
+
+        // Ambil data sesuai bulan dan tahun
+        $dataPadi = DataPadi::whereMonth('created_at', $bulan)
+                            ->whereYear('created_at', $tahun)
+                            ->get();
+
         return response()->json([
             'status' => true,
             'message' => 'Data berhasil ditemukan',
+            'data' => $dataPadi
+        ]);
+    }
+
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+        $datapadi = DataPadi::findOrFail($id);
+        
+        return response()->json([
+            'status' => 'true',
+            'message' => 'Data Detail Berhasil ditemukan',
             'data' => $datapadi
         ]);
     }
@@ -75,21 +98,6 @@ class DataPadiController extends Controller
             'data' => $datapadi
         ], 201);
 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-        $datapadi = DataPadi::findOrFail($id);
-        
-        return response()->json([
-            'status' => 'true',
-            'message' => 'Data Detail Berhasil ditemukan',
-            'data' => $datapadi
-        ]);
     }
 
     /**
