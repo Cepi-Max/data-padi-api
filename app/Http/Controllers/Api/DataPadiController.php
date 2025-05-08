@@ -37,7 +37,7 @@ class DataPadiController extends Controller
             'nama' => 'required',
             'jumlah_padi' => 'required',
             'jenis_padi' => 'required',
-            'foto_padi' => 'required|extensions:jpg,png',
+            'foto_padi' => 'extensions:jpg,png',
         ]);
 
         if($validator->fails()){
@@ -59,13 +59,14 @@ class DataPadiController extends Controller
 
         $id_author = auth()->user()->id;
 
-         $datapadi = DataPadi::create([
+        $datapadi = DataPadi::create([
             'nama' => $request->nama,
             'jumlah_padi' => $request->jumlah_padi,
             'jenis_padi' => $request->jenis_padi,
-            'foto_padi' => $fileName,
-            'id_author' => $id_author,
+            // 'foto_padi' => $fileName,
+            'user_id' => $id_author,
         ]);
+        // dd($id_author);
               
 
         return response()->json([
@@ -137,8 +138,8 @@ class DataPadiController extends Controller
             'nama' => $request->nama,
             'jumlah_padi' => $request->jumlah_padi,
             'jenis_padi' => $request->jenis_padi,
-            'foto_padi' => $fileName,
-            'id_author' => $id_author,
+            // 'foto_padi' => $fileName,
+            'user_id' => $id_author,
         ]);
         
 

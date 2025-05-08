@@ -23,13 +23,15 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DataPadiSeeder::class,
             ProductSeeder::class,
+            CartSeeder::class,
             PaymentMethodSeeder::class,
         ]);
         $user = User::create([
             'name' => 'Mas Pembeli',
             'email' => 'pembelibaru@example.com',
             'password' => Hash::make('password123'),
-            'role' => 'pembeli',
+            'lokasi' => 'Spa',
+            'role' => 'user',
         ]);
 
         // 2. Seed Products (buat oleh user_id petani / admin / bebas sementara)

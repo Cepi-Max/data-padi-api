@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CartApiController;
 use App\Http\Controllers\Api\DataPadiController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 // Yang lebih profesional
@@ -21,18 +23,29 @@ Route::post('/midtrans/webhook', [PaymentController::class, 'handleWebhook']);
 });
 
 // Auth Routes
-Route::prefix('auth')->name('api.auth.')->group(function() {
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+Route::prefix('v1')->name('api.')->group(function () {
+    Route::prefix('auth')->name('auth.')->group(function () {
+        Route::post('/register', [AuthController::class, 'register'])->name('register');
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+    });
 });
 
 
 Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(function() {
     
     Route::apiResource('datapadi', DataPadiController::class);
+    Route::post('datapadi/update/{id}', [DataPadiController::class, 'update']);
     
     Route::apiResource('product', ProductController::class);
+
+    Route::apiResource('cart', CartApiController::class);
+    Route::post('/cart/items', [CartApiController::class, 'destroyMany']);
+    // Route::delete('/cart/clear', [CartApiController::class, 'clear']);
+    // Route::get('/cart', [CartApiController::class, 'index']);
+    // Route::post('/cart/add', [CartApiController::class, 'add']);
+    // Route::put('/cart/update/{id}', [CartApiController::class, 'update']);
+    // Route::delete('/cart/remove/{id}', [CartApiController::class, 'remove']);
     
     Route::apiResource('order', OrderController::class);
     

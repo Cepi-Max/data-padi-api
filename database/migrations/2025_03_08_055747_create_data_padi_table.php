@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('data_padi', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama');
             $table->decimal('jumlah_padi');
-            $table->decimal('jenis_padi');
-            $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
+            $table->string('jenis_padi');
             $table->string('foto_padi')->nullable();
             $table->timestamps();
         });

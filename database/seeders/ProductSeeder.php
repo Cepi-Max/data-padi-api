@@ -18,19 +18,35 @@ class ProductSeeder extends Seeder
         $products = [
             [
                 'user_id' => '1',
-                'name' => 'Padi Rias',
-                'description' => 'Padi dengan pupuk kandang',
+                'name' => 'Gabah Rias',
+                'description' => 'Gabah Rias Kualitas Terjamin, ditanam tanpa pupuk kimia.',
                 'price' => '30000.00',
                 'stock' => '80',
-                'image' => null,
+                'image' => '1.jpg',
             ],
             [
                 'user_id' => '2',
-                'name' => 'Padi Bangka Selatan',
-                'description' => 'Padi dengan pupuk organik',
+                'name' => 'Gabah Bangka Selatan',
+                'description' => 'Gabah bersih kering, siap digiling tanpa dikeringkan kembali.',
                 'price' => '50000.00',
                 'stock' => '90',
-                'image' => null,
+                'image' => '2.jpg',
+            ],
+            [
+                'user_id' => '1',
+                'name' => 'Beras Premium 5 kiloan',
+                'description' => 'Beras kualitas super dari petani lokal.',
+                'price' => '50000.00',
+                'stock' => '90',
+                'image' => '3.jpg',
+            ],
+            [
+                'user_id' => '2',
+                'name' => 'Beras Medium 5 kiloan',
+                'description' => 'Beras medium untuk kebutuhan sehari-hari.',
+                'price' => '50000.00',
+                'stock' => '90',
+                'image' => 'default.jpg',
             ],
         ];
 

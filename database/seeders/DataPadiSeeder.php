@@ -16,18 +16,16 @@ class DataPadiSeeder extends Seeder
         $datapadi = [
             [
                 'nama' => 'Padi Rias',
+                'user_id' => 1,
                 'jumlah_padi' => '200',
-                'jenis_padi' => 'Padi Cianjur',
-                'latitude' => '19002322',
-                'longitude' => '876456456',
+                'jenis_padi' => 'sppd',
                 'foto_padi' => null,
             ],
             [
                 'nama' => 'Padi Cianjur',
+                'user_id' => 2,
                 'jumlah_padi' => '900',
-                'jenis_padi' => 'Padi Bangka',
-                'latitude' => '19002322',
-                'longitude' => '876456456',
+                'jenis_padi' => '98sds',
                 'foto_padi' => null,
             ],
         ];

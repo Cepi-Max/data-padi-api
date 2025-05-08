@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number')->nullable();
             $table->string('lokasi');
-            $table->enum('role',['superadmin', 'admin', 'petani', 'pembeli'])->default('pembeli');
+            $table->enum('role',['superadmin', 'admin', 'petani', 'user'])->default('user');
             $table->string('foto_profil')->nullable();
             $table->rememberToken();
             $table->timestamps();
