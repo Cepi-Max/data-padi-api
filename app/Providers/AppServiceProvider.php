@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Repositories\TransactionRepository;
 use App\Repositories\TransactionRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
+use Midtrans\Config;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,8 +21,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
     }
 }

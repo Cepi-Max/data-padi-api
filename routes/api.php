@@ -19,7 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Webhook dari midtrans
 Route::prefix('v1')->name('api.midtrans.')->group(function() {
-Route::post('/midtrans/webhook', [PaymentController::class, 'handleWebhook']);
+    Route::post('/midtrans/callback', [PaymentController::class, 'callback']);
+    Route::post('/midtrans/webhook', [PaymentController::class, 'handleWebhook']);
 });
 
 // Auth Routes

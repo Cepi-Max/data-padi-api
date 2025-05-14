@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Ricesales\Product;
 use App\Models\Ricesales\Order;
 use App\Models\Ricesales\OrderItem;
 use App\Models\Ricesales\Payment;
+use App\Models\Ricesales\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Midtrans\Snap;
 
 class OrderController extends Controller
 {
@@ -50,16 +51,36 @@ class OrderController extends Controller
         ]);
 
         foreach ($request->items as $item) {
+            $product = Product::find($item['product_id']);
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
-                'price' => Product::find($item['product_id'])->price,
-                'subtotal' => Product::find($item['product_id'])->price * $item['quantity']
+                'price' => $product->price,
+                'subtotal' => $product->price * $item['quantity']
             ]);
         }
 
-        return response()->json(['message' => 'Order created', 'order' => $order], 201);
+        // MIDTRANS TRANSACTION PARAMS
+        $snapPayload = [
+            'transaction_details' => [
+                'order_id' => $order->order_code,
+                'gross_amount' => $total_price,
+            ],
+            'customer_details' => [
+                'first_name' => $order->user->name,
+                'email' => $order->user->email,
+            ],
+            'enabled_payments' => ['gopay', 'bank_transfer', 'qris'],
+        ];
+
+        $snapToken = Snap::getSnapToken($snapPayload);
+
+        return response()->json([
+            'message' => 'Order created',
+            'order' => $order,
+            'snap_token' => $snapToken
+        ], 201);
     }
 
     public function show($id)

@@ -8,6 +8,8 @@ use App\Models\Ricesales\Transaction;
 use App\Services\CheckoutService;
 use Illuminate\Http\Request;
 
+use Midtrans\Notification;
+
 class PaymentController extends Controller
 {
     protected $checkoutService;
@@ -17,16 +19,41 @@ class PaymentController extends Controller
         $this->checkoutService = $checkoutService;
     }
 
-    public function checkout(Request $request)
+    // public function checkout(Request $request)
+    // {
+    //     $order = Order::findOrFail($request->order_id);
+
+    //     $result = $this->checkoutService->processCheckout($order);
+
+    //     return response()->json([
+    //         'snap_token' => $result['snap_token'],
+    //         'transaction' => $result['transaction']
+    //     ]);
+    // }
+
+    public function callback(Request $request)
     {
-        $order = Order::findOrFail($request->order_id);
+        $notif = new Notification();
 
-        $result = $this->checkoutService->processCheckout($order);
+        $order = Order::where('order_code', $notif->order_id)->first();
 
-        return response()->json([
-            'snap_token' => $result['snap_token'],
-            'transaction' => $result['transaction']
-        ]);
+        switch ($notif->transaction_status) {
+            case 'capture':
+            case 'settlement':
+                $order->status = 'paid';
+                break;
+            case 'pending':
+                $order->status = 'pending';
+                break;
+            case 'deny':
+            case 'expire':
+            case 'cancel':
+                $order->status = 'failed';
+                break;
+        }
+
+        $order->save();
+        return response()->json(['message' => 'Notification processed'], 200);
     }
 
     public function handleWebhook(Request $request)

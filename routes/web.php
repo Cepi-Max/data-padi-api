@@ -11,7 +11,9 @@ use App\Http\Controllers\SesiController;
 use App\Http\Middleware\UserAkses;
 use Illuminate\Support\Facades\Route;
 
-
+Route::get('/cek-midtrans-key', function () {
+    return env('MIDTRANS_SERVER_KEY');
+});
 // Route::middleware(['guest'])->group(function(){
 //     Route::get('/login', [SesiController::class, 'index'])->name('login');
 //     Route::post('/login', [SesiController::class, 'login']);
