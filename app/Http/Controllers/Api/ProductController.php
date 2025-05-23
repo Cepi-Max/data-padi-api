@@ -58,7 +58,7 @@ class ProductController extends Controller
          if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $file = $request->file('image'); 
             $fileName = now()->format('Y-m-d_H-i-s') . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $path   = 'images/petani/dataproduk/fotoproduk/'.$fileName;
+            $path   = 'images/dataproduk/'.$fileName;
             Storage::disk('public')->put($path, file_get_contents($file));
          } else {
              $fileName = 'default.png';
@@ -109,10 +109,10 @@ class ProductController extends Controller
             $file = $request->file('image');
 
             $fileName = now()->format('Y-m-d_H-i-s') . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $path = 'images/petani/dataproduk/fotoproduk/'.$fileName;
+            $path = 'images/dataproduk/'.$fileName;
 
             if ($dataproduct->image && $dataproduct->image !== 'default.png') {
-                Storage::disk('public')->delete('images/petani/dataproduk/fotoproduk/'.$dataproduct->image);
+                Storage::disk('public')->delete('images/dataproduk/'.$dataproduct->image);
             }
 
             Storage::disk('public')->put($path, file_get_contents($file));
@@ -148,7 +148,7 @@ class ProductController extends Controller
         $dataproduct = Product::findOrFail($id);
 
         if (!empty($dataproduct->image) && $dataproduct->image !== 'default.png') {
-            $filePath = 'images/petani/dataproduk/fotoproduk/' . $dataproduct->image;
+            $filePath = 'images/dataproduk/' . $dataproduct->image;
             Storage::disk('public')->delete($filePath);
         }
 
