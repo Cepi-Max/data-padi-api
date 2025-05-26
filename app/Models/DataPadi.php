@@ -14,7 +14,7 @@ class DataPadi extends Model
     protected $fillable = ['nama', 'user_id', 'jumlah_padi', 'jenis_padi', 'latitude', 'longitude', 'foto_padi'];
     // protected $with = ['author'];
 
-    public function author(): BelongsTo
+    public function petani(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

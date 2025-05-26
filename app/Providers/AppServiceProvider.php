@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repositories\TransactionRepository;
 use App\Repositories\TransactionRepositoryInterface;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Midtrans\Config;
 
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Paginator::useBootstrap();
         Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         Config::$isProduction = false;
         Config::$isSanitized = true;
