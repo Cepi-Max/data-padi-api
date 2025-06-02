@@ -8,6 +8,7 @@ use App\Models\Ricesales\OrderItem;
 use App\Models\Ricesales\Payment;
 use App\Models\Ricesales\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Midtrans\Snap;
 
@@ -15,8 +16,28 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orderdata = Order::all();
-         
+        $user = Auth::user();
+
+        if ($user->role === 'user') {
+            // Ambil order user sendiri + order items-nya
+            $orderdata = Order::with('orderItems')
+                ->where('user_id', $user->id)
+                ->get();
+
+        } else if ($user->role === 'admin') {
+            // Ambil order dari semua user yang punya produk + order items-nya
+            $productUserIds = Product::pluck('user_id')->unique();
+            $orderdata = Order::with('orderItems')
+                ->whereIn('user_id', $productUserIds)
+                ->get();
+
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Role tidak dikenali'
+            ], 403);
+        }
+
         return response()->json([
             'status' => true,
             'message' => 'Data berhasil ditemukan',
@@ -61,6 +82,13 @@ class OrderController extends Controller
             ]);
         }
 
+        // ==== HAPUS ITEM CART DI SINI ====
+        $userCart = \App\Models\Ricesales\Cart::where('user_id', $request->user_id)->first();
+        if ($userCart) {
+            // Hapus semua CartItem yang sudah diorder
+            $cartItemProductIds = collect($request->items)->pluck('product_id')->toArray();
+            $userCart->items()->whereIn('product_id', $cartItemProductIds)->delete();
+        }
         // MIDTRANS TRANSACTION PARAMS
         $snapPayload = [
             'transaction_details' => [

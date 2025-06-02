@@ -32,33 +32,33 @@ class PaymentController extends Controller
     // }
 
     public function callback(Request $request)
-{
-// dd($request->transaction_status);
-//     $notif = new Notification();
+    {
+    // dd($request->transaction_status);
+    //     $notif = new Notification();
 
-    $order = Order::where('order_code', $request->order_id)->first();
-    switch ($request->transaction_status) {
-        case 'capture':
-        case 'settlement':
-            $order->status = 'completed';
-            break;
-        case 'pending':
-            $order->status = 'pending';
-            break;
-        case 'deny':
-        case 'expire':
-        case 'cancel':
-            $order->status = 'canceled';
-            break;
+        $order = Order::where('order_code', $request->order_id)->first();
+        switch ($request->transaction_status) {
+            case 'capture':
+            case 'settlement':
+                $order->status = 'completed';
+                break;
+            case 'pending':
+                $order->status = 'pending';
+                break;
+            case 'deny':
+            case 'expire':
+            case 'cancel':
+                $order->status = 'canceled';
+                break;
+        }
+
+        if (in_array($request->transaction_status, ['capture', 'settlement'])) {
+            $order->is_paid = true;
+        }
+
+        $order->save();
+        return response()->json(['message' => 'Notification processed'], 200);
     }
-
-    if (in_array($request->transaction_status, ['capture', 'settlement'])) {
-        $order->is_paid = true;
-    }
-
-    $order->save();
-    return response()->json(['message' => 'Notification processed'], 200);
-}
 
 
     public function handleWebhook(Request $request)

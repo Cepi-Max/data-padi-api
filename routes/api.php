@@ -41,12 +41,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(function() 
     Route::apiResource('product', ProductController::class);
 
     Route::apiResource('cart', CartApiController::class);
+    Route::post('cart/update/{id}', [CartApiController::class, 'update']);
     Route::post('/cart/items', [CartApiController::class, 'destroyMany']);
-    // Route::delete('/cart/clear', [CartApiController::class, 'clear']);
-    // Route::get('/cart', [CartApiController::class, 'index']);
-    // Route::post('/cart/add', [CartApiController::class, 'add']);
-    // Route::put('/cart/update/{id}', [CartApiController::class, 'update']);
-    // Route::delete('/cart/remove/{id}', [CartApiController::class, 'remove']);
     
     Route::apiResource('order', OrderController::class);
     
