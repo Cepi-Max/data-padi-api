@@ -20,14 +20,14 @@ class OrderController extends Controller
 
         if ($user->role === 'user') {
             // Ambil order user sendiri + order items-nya
-            $orderdata = Order::with('orderItems')
+            $orderdata = Order::with('orderItems.product')
                 ->where('user_id', $user->id)
                 ->get();
 
         } else if ($user->role === 'admin') {
             // Ambil order dari semua user yang punya produk + order items-nya
             $productUserIds = Product::pluck('user_id')->unique();
-            $orderdata = Order::with('orderItems')
+            $orderdata = Order::with('orderItems.product')
                 ->whereIn('user_id', $productUserIds)
                 ->get();
 
