@@ -89,6 +89,16 @@ class OrderController extends Controller
             $cartItemProductIds = collect($request->items)->pluck('product_id')->toArray();
             $userCart->items()->whereIn('product_id', $cartItemProductIds)->delete();
         }
+
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = config('services.midtrans.is_production');
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+
         // MIDTRANS TRANSACTION PARAMS
         $snapPayload = [
             'transaction_details' => [
