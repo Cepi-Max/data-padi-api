@@ -15,7 +15,23 @@ class ProductController extends Controller
     //
     public function index()
     {
-        $productdata = Product::all();
+        $user = Auth::user();
+        if ($user->role === 'user') {
+            
+            $productdata = Product::all();
+
+        } else if ($user->role === 'admin') {
+            // Ambil order dari semua user yang punya produk + order items-nya
+            $productUserIds = Product::pluck('user_id')->unique();
+             $productdata = Product::whereIn('user_id', $productUserIds)
+                ->get();
+
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Role tidak dikenali'
+            ], 403);
+        }
          
         return response()->json([
             'status' => true,
