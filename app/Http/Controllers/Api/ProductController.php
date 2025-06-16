@@ -17,15 +17,11 @@ class ProductController extends Controller
     {
         $user = Auth::user();
         if ($user->role === 'user') {
-            
             $productdata = Product::all();
-
-        } else if ($user->role === 'admin') {
-            // Ambil order dari semua user yang punya produk + order items-nya
-            $productUserIds = Product::pluck('user_id')->unique();
-             $productdata = Product::whereIn('user_id', $productUserIds)
-                ->get();
-
+        } elseif ($user->role === 'admin') {
+            $productdata = Product::where('user_id', $user->id)->get();
+        } elseif ($user->role === 'superadmin') {
+            $productdata = Product::all();
         } else {
             return response()->json([
                 'status' => false,
