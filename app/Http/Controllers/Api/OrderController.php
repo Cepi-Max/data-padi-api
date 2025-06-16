@@ -25,10 +25,12 @@ class OrderController extends Controller
                 ->get();
 
         } else if ($user->role === 'admin') {
-            // Ambil order dari semua user yang punya produk + order items-nya
-            $productUserIds = Product::pluck('user_id')->unique();
-            $orderdata = Order::with('orderItems.product')
-                ->whereIn('user_id', $productUserIds)
+            $adminProductIds = Product::where('user_id', $user->id)->pluck('id');
+            $orderIds = OrderItem::whereIn('product_id', $adminProductIds)
+                ->pluck('order_id')
+                ->unique();
+            $orderdata = Order::with(['orderItems.product'])
+                ->whereIn('id', $orderIds)
                 ->get();
 
         } else {
