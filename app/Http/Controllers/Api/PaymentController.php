@@ -40,7 +40,7 @@ class PaymentController extends Controller
         switch ($request->transaction_status) {
             case 'capture':
             case 'settlement':
-                $order->status = 'completed';
+                $order->status = 'pending';
                 break;
             case 'pending':
                 $order->status = 'pending';

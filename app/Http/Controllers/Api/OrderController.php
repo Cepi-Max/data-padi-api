@@ -137,7 +137,7 @@ class OrderController extends Controller
         // kalo request hanya update status
         if ($request->has('status') && !$request->has('items')) {
             $validator = Validator::make($request->all(), [
-                'status' => 'required|in:pending,paid,shipped,delivered,cancelled'
+                'status' => 'required|in:pending,shipped,delivered,,completed,cancelled'
             ]);
 
             if ($validator->fails()) {
