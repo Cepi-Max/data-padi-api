@@ -10,7 +10,7 @@ use App\Models\Ricesales\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Midtrans\Snap; // Pastikan ini ada
+use Midtrans\Snap;
 
 class OrderController extends Controller
 {
@@ -20,8 +20,8 @@ class OrderController extends Controller
 
         if ($user->role === 'user') {
             // Ambil order user sendiri + order items-nya
-            // Tambahkan with('user') jika Anda ingin menyertakan objek user dalam respons
-            $orderdata = Order::with('orderItems.product', 'user') 
+            // >>> PERBAIKAN: Tambahkan .user untuk memuat relasi penjual dari produk
+            $orderdata = Order::with('orderItems.product.user', 'user')
                 ->where('user_id', $user->id)
                 ->latest()
                 ->get();
@@ -31,7 +31,8 @@ class OrderController extends Controller
             $orderIds = OrderItem::whereIn('product_id', $adminProductIds)
                 ->pluck('order_id')
                 ->unique();
-            $orderdata = Order::with(['orderItems.product', 'user']) 
+            // >>> PERBAIKAN: Tambahkan .user untuk memuat relasi penjual dari produk
+            $orderdata = Order::with(['orderItems.product.user', 'user'])
                 ->whereIn('id', $orderIds)
                 ->latest()
                 ->get();
@@ -125,6 +126,7 @@ class OrderController extends Controller
             'customer_details' => [
                 'first_name' => $user->name, // Menggunakan $user->name
                 'email' => $user->email,     // Menggunakan $user->email
+                'phone' => $user->phone_number, // Tambahkan nomor telepon di Midtrans jika diperlukan
             ],
             'enabled_payments' => ['gopay', 'bank_transfer', 'qris'],
         ];
@@ -153,8 +155,8 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        // Pastikan 'user' di-load di sini juga agar userId tersedia di Flutter
-        $order = Order::with('orderItems.product', 'user')->find($id); // <-- Tambahkan 'user' di sini
+        // >>> PERBAIKAN: Tambahkan .user untuk memuat relasi penjual dari produk
+        $order = Order::with('orderItems.product.user', 'user')->find($id);
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
@@ -168,7 +170,7 @@ class OrderController extends Controller
         // kalo request hanya update status
         if ($request->has('status') && !$request->has('items')) {
             $validator = Validator::make($request->all(), [
-                'status' => 'required|in:pending,shipped,delivered,completed,canceled' // Perbaiki 'cancelled' menjadi 'canceled' agar konsisten
+                'status' => 'required|in:pending,shipped,delivered,completed,canceled'
             ]);
 
             if ($validator->fails()) {
@@ -188,7 +190,7 @@ class OrderController extends Controller
             'items' => 'required|array',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'status' => 'nullable|in:pending,paid,shipped,delivered,canceled' // Perbaiki 'cancelled' menjadi 'canceled'
+            'status' => 'nullable|in:pending,paid,shipped,delivered,canceled'
         ]);
 
         if ($validator->fails()) {
