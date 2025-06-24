@@ -23,6 +23,7 @@ class OrderController extends Controller
             // Tambahkan with('user') jika Anda ingin menyertakan objek user dalam respons
             $orderdata = Order::with('orderItems.product', 'user') // <-- Tambahkan 'user' di sini
                 ->where('user_id', $user->id)
+                ->latest()
                 ->get();
 
         } else if ($user->role === 'admin') {
@@ -32,6 +33,7 @@ class OrderController extends Controller
                 ->unique();
             $orderdata = Order::with(['orderItems.product', 'user']) // <-- Tambahkan 'user' di sini
                 ->whereIn('id', $orderIds)
+                ->latest()
                 ->get();
 
         } else {
