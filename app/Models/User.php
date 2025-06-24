@@ -25,6 +25,7 @@ class User extends Authenticatable
         'lokasi',
         'role',
         'foto_profil',
+        'phone_number',
     ];
 
     /**
