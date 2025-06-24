@@ -9,7 +9,7 @@ class Order extends Model
 {
     //
     protected $table = 'orders';
-    protected $fillable = ['user_id', 'order_code', 'total_price', 'status', 'stock', 'image', 'is_paid'];
+    protected $fillable = ['user_id', 'order_code', 'total_price', 'status', 'stock', 'image', 'midtrans_transaction_token', 'is_paid'];
 
     public function product() {
         return $this->belongsTo(Product::class);

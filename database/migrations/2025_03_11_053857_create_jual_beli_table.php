@@ -38,6 +38,7 @@ return new class extends Migration {
             $table->decimal('total_price', 10, 2);
             $table->boolean('is_cod')->default(false); 
             $table->boolean('is_paid')->default(false); 
+            $table->string('midtrans_transaction_token')->nullable(); // <<< Tambahan ini
             $table->enum('status', ['pending', 'shipped', 'delivered', 'completed', 'canceled'])->default('pending');
             $table->timestamps();
         });

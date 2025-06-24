@@ -10,7 +10,7 @@ use App\Models\Ricesales\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Midtrans\Snap;
+use Midtrans\Snap; // Pastikan ini ada
 
 class OrderController extends Controller
 {
@@ -20,7 +20,8 @@ class OrderController extends Controller
 
         if ($user->role === 'user') {
             // Ambil order user sendiri + order items-nya
-            $orderdata = Order::with('orderItems.product')
+            // Tambahkan with('user') jika Anda ingin menyertakan objek user dalam respons
+            $orderdata = Order::with('orderItems.product', 'user') // <-- Tambahkan 'user' di sini
                 ->where('user_id', $user->id)
                 ->get();
 
@@ -29,7 +30,7 @@ class OrderController extends Controller
             $orderIds = OrderItem::whereIn('product_id', $adminProductIds)
                 ->pluck('order_id')
                 ->unique();
-            $orderdata = Order::with(['orderItems.product'])
+            $orderdata = Order::with(['orderItems.product', 'user']) // <-- Tambahkan 'user' di sini
                 ->whereIn('id', $orderIds)
                 ->get();
 
@@ -63,6 +64,10 @@ class OrderController extends Controller
         $total_price = 0;
         foreach ($request->items as $item) {
             $product = Product::find($item['product_id']);
+            // Pastikan product ditemukan
+            if (!$product) {
+                return response()->json(['error' => 'Product with ID ' . $item['product_id'] . ' not found.'], 404);
+            }
             $total_price += $product->price * $item['quantity'];
         }
 
@@ -101,6 +106,14 @@ class OrderController extends Controller
         // Set 3DS transaction for credit card to true
         \Midtrans\Config::$is3ds = true;
 
+        // Ambil data user untuk customer_details
+        $user = \App\Models\User::find($request->user_id);
+        if (!$user) {
+            // Ini seharusnya tidak terjadi karena validator 'exists:users,id'
+            // Tapi baik untuk jaga-jaga
+            return response()->json(['error' => 'User not found for payment details.'], 404);
+        }
+
         // MIDTRANS TRANSACTION PARAMS
         $snapPayload = [
             'transaction_details' => [
@@ -108,24 +121,38 @@ class OrderController extends Controller
                 'gross_amount' => $total_price,
             ],
             'customer_details' => [
-                'first_name' => $order->user->name,
-                'email' => $order->user->email,
+                'first_name' => $user->name, // Menggunakan $user->name
+                'email' => $user->email,     // Menggunakan $user->email
             ],
             'enabled_payments' => ['gopay', 'bank_transfer', 'qris'],
         ];
 
-        $snapToken = Snap::getSnapToken($snapPayload);
+        try {
+            $snapToken = Snap::getSnapToken($snapPayload);
 
-        return response()->json([
-            'message' => 'Order created',
-            'order' => $order,
-            'snap_token' => $snapToken
-        ], 201);
+            // === BARIS TAMBAHAN UNTUK MENYIMPAN TOKEN MIDTRANS ===
+            $order->midtrans_transaction_token = $snapToken;
+            $order->save();
+            // ====================================================
+
+            return response()->json([
+                'message' => 'Order created',
+                'order' => $order,
+                'snap_token' => $snapToken // Token dikirim ke frontend Flutter
+            ], 201);
+        } catch (\Exception $e) {
+            // Tangani error jika gagal mendapatkan Snap Token dari Midtrans
+            return response()->json([
+                'message' => 'Failed to get Midtrans Snap Token',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id)
     {
-        $order = Order::with('orderItems.product')->find($id);
+        // Pastikan 'user' di-load di sini juga agar userId tersedia di Flutter
+        $order = Order::with('orderItems.product', 'user')->find($id); // <-- Tambahkan 'user' di sini
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
@@ -139,7 +166,7 @@ class OrderController extends Controller
         // kalo request hanya update status
         if ($request->has('status') && !$request->has('items')) {
             $validator = Validator::make($request->all(), [
-                'status' => 'required|in:pending,shipped,delivered,,completed,cancelled'
+                'status' => 'required|in:pending,shipped,delivered,completed,canceled' // Perbaiki 'cancelled' menjadi 'canceled' agar konsisten
             ]);
 
             if ($validator->fails()) {
@@ -159,18 +186,23 @@ class OrderController extends Controller
             'items' => 'required|array',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'status' => 'nullable|in:pending,paid,shipped,delivered,cancelled'
+            'status' => 'nullable|in:pending,paid,shipped,delivered,canceled' // Perbaiki 'cancelled' menjadi 'canceled'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
 
+        // Pastikan Anda ingin menghapus semua order item dan membuat yang baru.
+        // Jika tidak, Anda bisa menggunakan metode updateOrCreate atau melakukan pengecekan.
         OrderItem::where('order_id', $id)->delete();
 
         $total_price = 0;
         foreach ($request->items as $item) {
             $product = Product::find($item['product_id']);
+            if (!$product) {
+                 return response()->json(['error' => 'Product with ID ' . $item['product_id'] . ' not found.'], 404);
+            }
             $subtotal = $product->price * $item['quantity'];
             $total_price += $subtotal;
 
@@ -229,6 +261,10 @@ class OrderController extends Controller
         }
 
         $order = Order::find($request->order_id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
         if ($order->total_price != $request->amount) {
             return response()->json(['error' => 'Invalid payment amount'], 400);
         }
@@ -242,7 +278,9 @@ class OrderController extends Controller
             'transaction_id' => 'TXN-' . now()->format('YmdHis')
         ]);
 
-        $order->update(['status' => 'paid']);
+        // Perbarui status pesanan menjadi 'paid' jika ini adalah metode pembayaran backend Anda
+        // Perhatikan bahwa untuk pembayaran Midtrans, status 'is_paid' mungkin diperbarui oleh webhook
+        $order->update(['status' => 'paid', 'is_paid' => true]);
 
         return response()->json(['message' => 'Payment successful', 'payment' => $payment], 200);
     }
