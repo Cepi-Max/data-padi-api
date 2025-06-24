@@ -5,9 +5,11 @@ use App\Http\Controllers\Api\DataPadiController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\StatisticController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -48,6 +50,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(function() 
     
     // Route::post('/pay', [PaymentController::class, 'pay']);
     Route::post('/checkout', [PaymentController::class, 'checkout']);
+
+    Route::get('/statistics', [StatisticController::class, 'getDashboardStats']); // Rute baru
 }); 
 
 // Route::get('/user', function (Request $request) {
