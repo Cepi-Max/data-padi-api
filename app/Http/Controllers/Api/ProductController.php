@@ -98,16 +98,14 @@ class ProductController extends Controller
 
     public function update(Request $request, string $id)
     {
-        //
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'price' => 'required',
             'stock' => 'required',
-            'image' => 'extensions:jpg,png',
-            // 'image' => 'required|extensions:jpg,png',
+            'image' => 'sometimes|image|mimes:jpg,png,jpeg,gif,svg|max:2048', // 'sometimes' lebih aman dari 'extensions'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'validasi error',
@@ -116,42 +114,45 @@ class ProductController extends Controller
         }
 
         $dataproduct = Product::findOrFail($id);
+        $user_id = Auth::user()->id;
 
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
-            $file = $request->file('image');
-
-            $fileName = now()->format('Y-m-d_H-i-s') . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $path = 'images/dataproduk/'.$fileName;
-
-            if ($dataproduct->image && $dataproduct->image !== 'default.png') {
-                Storage::disk('public')->delete('images/dataproduk/'.$dataproduct->image);
-            }
-
-            Storage::disk('public')->put($path, file_get_contents($file));
-
-            $dataproduct->image = $fileName;
-        } else {
-            $dataproduct->image = $dataproduct->image ?? 'default.png';
-        }
-
-         $user_id = Auth::user()->id;
-
-         $dataproduct->update([
+        // 1. Siapkan data teks yang pasti di-update
+        $updateData = [
             'user_id' => $user_id,
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
-            'image' => $fileName,
-        ]);
-              
+        ];
+
+        // 2. Cek jika ada file gambar baru yang di-upload
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $file = $request->file('image');
+            $fileName = now()->format('Y-m-d_H-i-s') . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $path = 'images/dataproduk/' . $fileName;
+
+            // Hapus gambar lama jika ada
+            if ($dataproduct->image && $dataproduct->image !== 'default.png') {
+                Storage::disk('public')->delete('images/dataproduk/' . $dataproduct->image);
+            }
+
+            // Simpan gambar baru
+            Storage::disk('public')->put($path, file_get_contents($file));
+
+            // 3. Tambahkan nama file gambar BARU ke data yang akan di-update
+            $updateData['image'] = $fileName;
+        }
+
+        // 4. Lakukan update ke database dengan data yang sudah disiapkan
+        // Jika tidak ada gambar baru, key 'image' tidak akan ada di $updateData,
+        // sehingga field image di database tidak akan tersentuh.
+        $dataproduct->update($updateData);
 
         return response()->json([
             'status' => true,
             'message' => 'data berhasil diubah',
             'data' => $dataproduct
-        ], 201);
-
+        ], 200); // Gunakan 200 OK untuk update yang berhasil
     }
 
     public function destroy(string $id)
