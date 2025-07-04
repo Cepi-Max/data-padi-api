@@ -39,7 +39,6 @@ class AuthController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                         'lokasi' => $user->lokasi,
-                        'phone_number' => $user->phone_number, // <--- TAMBAHAN INI
                         'role' => $user->role,
                     ]
                 ], 200);
@@ -49,7 +48,7 @@ class AuthController extends Controller
                 case 'superadmin':
                     return redirect('admin/superadmin');
                 case 'admin':
-                    return redirect('admin/admin');
+                    return redirect('/dashboard');
                 case 'petani':
                     return redirect('admin/petani');
                 case 'pembeli':
@@ -79,7 +78,6 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone_number' => 'required',
             'password' => 'required|string|min:8|confirmed',
             'lokasi' => 'required',
         ]);
@@ -94,7 +92,6 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
             'lokasi' => $request->lokasi,
         ]);
@@ -109,7 +106,6 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'lokasi' => $user->lokasi,
-                    'phone_number' => $user->phone_number, // <--- TAMBAHAN INI
                 ]
             ], 201);
         }
