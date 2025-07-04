@@ -1,127 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <title>Register - Data Padi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 4 & FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
     <style>
         body {
-            background: linear-gradient(135deg, #dbe6d0 0%, #b1e19b 100%);
+            background: linear-gradient(to right, #e6ffe6, #ccffcc);
             min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', sans-serif;
         }
+
         .card {
-            border-radius: 1.5rem;
-            box-shadow: 0 4px 20px rgba(144, 238, 144, 0.25);
+            border-radius: 25px;
+            box-shadow: 0 8px 30px rgba(0, 128, 0, 0.2);
+            animation: fadeInDown 0.9s;
         }
-        .logo-padi {
+
+        .card-header {
+            background-color: #f0fff0;
+            border-radius: 25px 25px 0 0;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: #449d44;
+        }
+
+        .form-control {
+            border-radius: 1rem;
+            padding: 0.75rem;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-green {
+            background-color: #5cb85c;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            border-radius: 1rem;
+        }
+
+        .btn-green:hover {
+            background-color: #449d44;
+            transform: scale(1.03);
+        }
+
+        .logo {
             width: 60px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-        .btn-padi {
-            background-color: #6baf54;
+
+        .progress-bar {
+            height: 4px;
+            border-radius: 10px;
+            background-color: #28a745;
+            animation: slideProgress 2s linear infinite;
+        }
+
+        @keyframes slideProgress {
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .input-group-text {
+            background: #e8f5e9;
             border: none;
+            border-radius: 1rem 0 0 1rem;
         }
-        .btn-padi:hover {
-            background-color: #4c8d3d;
+
+        .login-link {
+            color: #5cb85c;
+            font-weight: 500;
         }
-        .bg-padi {
+
+        .login-link:hover {
+            color: #449d44;
+            text-decoration: underline;
+        }
+
+        .footer-padi {
             position: absolute;
             bottom: 0;
-            left: 0;
-            width: 160px;
-            opacity: 0.16;
-            pointer-events: none;
-        }
-        .card-header {
-            background-color: #f6fff2;
-            border-radius: 1.5rem 1.5rem 0 0;
+            width: 100%;
             text-align: center;
-            color: #6baf54;
-            font-size: 1.4rem;
-            font-weight: bold;
-            border-bottom: none;
-        }
-        .form-label {
-            color: #4c8d3d;
-        }
-        .login-link {
-            color: #6baf54;
-        }
-        .login-link:hover {
-            color: #4c8d3d;
-            text-decoration: underline;
+            font-size: 0.85rem;
+            padding: 1rem;
+            color: #888;
         }
     </style>
 </head>
+
 <body>
-    <section class="vh-100 d-flex align-items-center" style="position:relative;">
-        <img src="https://img.icons8.com/ios-filled/100/6baf54/rice-plant.png" alt="Padi" class="bg-padi">
-        <div class="container py-5 h-100">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <div class="card shadow-2-strong p-3">
-                        <div class="card-header">
-                            <img src="https://img.icons8.com/ios-filled/100/6baf54/rice-plant.png" class="logo-padi" alt="Logo Data Padi"><br>
-                            DAFTAR AKUN
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-7 col-lg-5">
+            <div class="card animate__animated animate__fadeInDown">
+                <div class="card-header">
+                    <div>🌾DAFTAR AKUN</div>
+                </div>
+                <div class="card-body p-4">
+                    @if ($errors->any())
+                        <div class="alert alert-danger animate__animated animate__shakeX">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                        <div class="card-body">
-                            <div class="text-center mb-3">
-                                <span style="color:#4c8d3d;font-weight:500;">Silakan daftar untuk mengakses data padi</span>
+                    @endif
+
+                    <form method="POST" action="{{ route('register') }}" id="registerForm">
+                        @csrf
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i
+                                            class="fa fa-user"></i></span></div>
+                                <input type="text" name="name" class="form-control" required value="{{ old('name') }}">
                             </div>
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $item)
-                                            <li>{{ $item }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            @if(session('success'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-                            <form method="POST" action="{{ route('register') }}">
-                                @csrf
-
-                                <div class="form-group">
-                                    <label for="name" class="form-label">Nama</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
-                                </div>
-
-                                <div class="mb-3 mt-4">
-                                    <span>Sudah punya akun?</span>
-                                    <a href="{{ route('login') }}" class="login-link">Login</a>
-                                </div>
-                                <button type="submit" class="btn btn-padi btn-block text-white">Daftar</button>
-                            </form>
                         </div>
-                    </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i
+                                            class="fa fa-envelope"></i></span></div>
+                                <input type="email" name="email" class="form-control" required
+                                    value="{{ old('email') }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i
+                                            class="fa fa-lock"></i></span></div>
+                                <input type="password" name="password" id="password" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Konfirmasi Password</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i
+                                            class="fa fa-lock"></i></span></div>
+                                <input type="password" name="password_confirmation" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="text-center my-3">
+                            <small>Sudah punya akun? <a href="{{ route('login') }}" class="login-link">Login di
+                                    sini</a></small>
+                        </div>
+
+                        <button type="submit" class="btn btn-green btn-block">
+                            <span id="btnText">Daftar Sekarang</span>
+                            <div id="loadingBar" class="progress mt-2 d-none">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+                            </div>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"></script>
+    </div>
+
+    <div class="footer-padi">
+        &copy; {{ date('Y') }} Sistem Informasi Data Padi
+    </div>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#registerForm').on('submit', function () {
+            $('#btnText').text('Sedang memproses...');
+            $('#loadingBar').removeClass('d-none');
+        });
+    </script>
 </body>
+
 </html>
