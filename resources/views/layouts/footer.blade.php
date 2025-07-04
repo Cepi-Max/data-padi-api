@@ -1,32 +1,49 @@
-<footer class="footer py-4  ">
-    <div class="container-fluid">
-      <div class="row align-items-center justify-content-lg-between">
-        <div class="col-lg-6 mb-lg-0 mb-4">
-          <div class="copyright text-center text-sm text-muted text-lg-start">
-            © <script>
-              document.write(new Date().getFullYear())
-            </script>,
-            made with <i class="fa fa-heart"></i> by
-            <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
-            for a better web.
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-            <li class="nav-item">
-              <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
-            </li>
-            <li class="nav-item">
-              <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
-            </li>
-            <li class="nav-item">
-              <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
-            </li>
-            <li class="nav-item">
-              <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
-            </li>
-          </ul>
-        </div>
+<footer class="footer py-4 bg-white shadow-sm mt-auto" style="font-size: 0.875rem; border-top: 1px solid #e5e5e5;">
+  <style>
+    .footer a {
+      color: #6c757d;
+      transition: color 0.2s ease;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+      color: #4c8d3d !important;
+    }
+
+    @media (max-width: 768px) {
+      .footer .text-md-start {
+        text-align: center !important;
+      }
+
+      .footer .justify-content-md-end {
+        justify-content: center !important;
+      }
+    }
+  </style>
+
+  <div class="container-fluid">
+    <div class="row align-items-center justify-content-between">
+      <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+        <span class="text-muted small">
+          ©
+          <script>document.write(new Date().getFullYear())</script>
+          — <strong>{{ config('app.name', 'Padi Kita Dashboard') }}</strong>. All rights reserved.
+        </span>
+      </div>
+
+      <div class="col-md-6">
+        <ul class="nav justify-content-center justify-content-md-end">
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-muted small">Tentang Kami</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-muted small">Kontak</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-muted small">Kebijakan Privasi</a>
+          </li>
+        </ul>
       </div>
     </div>
-  </footer>
+  </div>
+</footer>

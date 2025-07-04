@@ -1,23 +1,35 @@
-<!-- Navbar -->
 @php
     use Illuminate\Support\Facades\Auth;
     $user = Auth::user();
 @endphp
-<div class="topbar d-flex justify-content-between align-items-center">
-    <span style="font-size:1.2rem;font-weight:600;letter-spacing:1px;color:#6baf54;">
-        Selamat Datang, {{ $user ? $user->name : 'Admin' }}!
-    </span>
+
+<div class="topbar d-flex justify-content-between align-items-center px-4 py-3 mb-4"
+    style="background: #ffffff; border-radius: 12px; box-shadow: 0 2px 10px rgba(107, 175, 84, 0.08);">
+    <div>
+        <h5 class="mb-0" style="font-weight: 600; color: #4c8d3d;">
+            👋 Selamat Datang, {{ $user ? $user->name : 'Admin' }}
+        </h5>
+        <small style="color: #7c9f7c;">Semoga harimu menyenangkan 🌾</small>
+    </div>
+
     <div class="d-flex align-items-center gap-3">
-      <img src="https://img.icons8.com/ios-glyphs/36/6baf54/user-male-circle.png" alt="Admin" style="vertical-align:middle;">
-      <span style="font-size:1rem; color:#4c8d3d; margin-right:12px;">
-        {{ $user ? $user->email : '-' }}
-      </span>
-      <form action="{{ route('logout') }}" method="GET" class="d-inline">
-          @csrf
-          <button type="submit" class="btn btn-sm" style="background:#e1f5e5; color:#4c8d3d; border-radius:18px; font-weight:500; box-shadow:0 1px 4px rgba(107,175,84,0.12); transition:background .2s;">
-              Logout
-          </button>
-      </form>
+        <div class="d-flex align-items-center gap-2">
+            <img src="https://img.icons8.com/ios-glyphs/36/6baf54/user-male-circle.png" alt="Admin" width="32"
+                height="32" style="border-radius: 50%;">
+            <div style="line-height: 1;">
+                <div style="font-weight: 500; font-size: 0.95rem; color: #2c3e50;">
+                    {{ $user ? $user->email : '-' }}
+                </div>
+                <small style="color: #9e9e9e;">{{ ucfirst($user->role ?? 'Admin') }}</small>
+            </div>
+        </div>
+
+        <form action="{{ route('logout') }}" method="GET" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-sm"
+                style="background:#f5fdf6; color:#4c8d3d; border-radius:20px; font-weight:500; padding:6px 16px; border: 1px solid #d0ecd3; transition: all .2s;">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </button>
+        </form>
     </div>
 </div>
-

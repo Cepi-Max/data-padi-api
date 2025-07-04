@@ -1,159 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Data Padi</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <title>{{ config('app.name', 'Laravel') }} - Admin</title>
+
+    <!-- Diubah: Link CSS Bootstrap 4 diganti dengan Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Ditambahkan: Link untuk Bootstrap Icons (karena Anda menggunakannya) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #f5faf2;
-            color: #304c2a;
+        :root {
+            --primary-color: #2e7d32;
+            --primary-light: #a5d6a7;
+            --primary-dark: #1b5e20;
+            --bg-light: #f4fdf6;
+            --text-main: #2f4f2f;
+            --white: #ffffff;
         }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            /* Menggunakan flexbox untuk layout sidebar */
+        }
+
+        /* Sidebar */
         .sidebar {
             height: 100vh;
-            background: linear-gradient(135deg, #b1e19b 0%, #7fc77b 100%);
-            color: #fff;
-            min-width: 220px;
-            padding: 0;
+            background: #2c3e50;
+            color: var(--white);
+            width: 250px;
+            /* Lebar sidebar yang tetap */
             position: fixed;
-            box-shadow: 2px 0 10px rgba(144,238,144,0.15);
+            top: 0;
+            left: 0;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+            padding-top: 30px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
         }
-        .sidebar .sidebar-header {
-            padding: 24px 24px 12px 24px;
-            background: #6baf54;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-        }
-        .sidebar .sidebar-header img {
-            width: 48px;
-        }
-        .sidebar .sidebar-header h4 {
-            margin-top: 8px;
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-            color: #fff;
-        }
+
         .sidebar ul {
             list-style: none;
-            padding: 0 12px;
-            margin-top: 30px;
+            padding: 0;
+            margin: 0;
         }
-        .sidebar ul li {
-            margin-bottom: 16px;
-        }
+
         .sidebar ul li a {
-            color: #fff;
-            font-weight: 500;
-            font-size: 1rem;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 12px;
-            display: block;
-            transition: background .2s;
-        }
-        .sidebar ul li a.active,
-        .sidebar ul li a:hover {
-            background: #4c8d3d;
-            color: #fff;
-        }
-        .main-content {
-            margin-left: 230px;
-            padding: 30px;
-        }
-        .topbar {
-            background: #fff;
-            border-radius: 16px;
-            padding: 18px 30px;
-            margin-bottom: 24px;
             display: flex;
+            /* Diubah ke flex untuk alignment ikon */
             align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 12px rgba(144,238,144,0.09);
+            gap: 12px;
+            /* Jarak antara ikon dan teks */
+            padding: 12px 24px;
+            color: var(--white);
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
-        .stat-card {
-            border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(144,238,144,0.15);
-            background: #fff;
-            padding: 26px;
-            margin-bottom: 24px;
-            text-align: center;
+
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background-color: #34495e;
+            border-left-color: #81c784;
         }
-        .stat-card h6 {
-            color: #6baf54;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 7px;
+
+        .sidebar-footer {
+            margin-top: auto;
+            /* Mendorong footer ke bawah */
         }
-        .stat-card .stat {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #304c2a;
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            /* Memberi ruang untuk sidebar */
+            padding: 20px;
+            width: calc(100% - 250px);
+            /* Lebar konten utama */
+            min-height: 100vh;
         }
-        .table-padi th {
-            color: #6baf54;
-            background: #f2fbe7;
+
+        .topbar {
+            background-color: var(--white);
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(76, 175, 80, 0.12);
         }
-        @media (max-width: 767px) {
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            body {
+                display: block;
+                /* Kembalikan ke block di layar kecil */
+            }
+
             .sidebar {
                 position: static;
-                min-width: 100%;
+                width: 100%;
                 height: auto;
-                border-radius: 0;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             }
+
             .main-content {
                 margin-left: 0;
+                width: 100%;
                 padding: 15px;
             }
-            .topbar {
-                padding: 12px 15px;
-            }
-        }
-
-        /* Ubah warna border dan background aktif */
-        .pagination .page-item.active .page-link {
-            background-color: #6baf54 !important;  /* Hijau Data Padi */
-            border-color: #6baf54 !important;
-            color: #fff !important;
-            font-weight: bold;
-            box-shadow: 0 2px 8px rgba(107,175,84,0.13);
-        }
-
-        /* Warna link biasa */
-        .pagination .page-link {
-            color: #6baf54;
-            border-radius: 8px;
-            border: 1px solid #b1e19b;
-            background: #f9fdf6;
-            margin: 0 2px;
-            transition: background 0.15s;
-        }
-
-        /* Hover efek */
-        .pagination .page-link:hover {
-            background: #dbe6d0;
-            color: #356e35;
-            border-color: #6baf54;
         }
     </style>
+
+    @stack('styles')
 </head>
+
 <body>
     <!-- Sidebar -->
     @include('layouts.sidebar')
+
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Topbar -->
+        <!-- Topbar/Navbar -->
         @include('layouts.navbar')
-        @yield('content')
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"></script>
-    @stack('scripts')
 
+        <!-- Konten Halaman Dinamis -->
+        <main>
+            @yield('content')
+        </main>
+    </div>
+
+    <!-- Diubah: Script Bootstrap 4 diganti dengan Bootstrap 5 Bundle -->
+    <!-- Bundle ini sudah termasuk Popper.js, jadi lebih ringkas -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Dihapus: jQuery dan Popper.js lama (tidak diperlukan oleh Bootstrap 5) -->
+
+    <!-- Script untuk Chart.js (jika diperlukan) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Stack untuk script kustom dari halaman lain -->
+    @stack('scripts')
 </body>
+
 </html>

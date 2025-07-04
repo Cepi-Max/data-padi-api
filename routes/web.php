@@ -39,35 +39,38 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/superadmin', [AdminController::class, 'superadmin'])->name('show.welcome.superadmin');
     });
 
-    // Admin Only
-    Route::middleware('userAkses:admin')->group(function () {
-        Route::get('/admin/admin', [AdminDashboardController::class, 'index'])->name('show.welcome.admin');
+    // Grup untuk semua rute Admin
+    Route::prefix('admin')->name('admin.')->middleware('userAkses:admin')->group(function () {
+        
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // User Management
-        Route::get('users', [UserManagementController::class, 'index'])->name('admin.users.index');
-        Route::get('users/{id}/edit', [UserManagementController::class, 'edit'])->name('admin.users.edit');
-        Route::post('users/{id}', [UserManagementController::class, 'update'])->name('admin.users.update');
+        // User Management Routes
+        Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+        Route::post('users', [UserManagementController::class, 'store'])->name('users.store');
+        Route::get('users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
+        Route::put('users/{user}', [UserManagementController::class, 'update'])->name('users.update');
+        Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
         
         // Data Padi Route
-        Route::prefix('data-padi')->name('admin.data_padi.')->group(function () {
+        Route::prefix('data-padi')->name('data_padi.')->group(function () {
             Route::get('/', [DataPadiController::class, 'index'])->name('index');
             Route::get('/create', [DataPadiController::class, 'create'])->name('create');
             Route::post('/store', [DataPadiController::class, 'store'])->name('store');
-            Route::get('/{id}', [DataPadiController::class, 'show'])->name('show');
-            Route::get('/{id}/edit', [DataPadiController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [DataPadiController::class, 'update'])->name('update');
-            Route::delete('/{id}', [DataPadiController::class, 'destroy'])->name('destroy');
+            Route::get('/{dataPadi}', [DataPadiController::class, 'show'])->name('show');
+            Route::get('/{dataPadi}/edit', [DataPadiController::class, 'edit'])->name('edit');
+            Route::put('/{dataPadi}', [DataPadiController::class, 'update'])->name('update');
+            Route::delete('/{dataPadi}', [DataPadiController::class, 'destroy'])->name('destroy');
         });
 
         // Product Route 
-        Route::prefix('admin/products')->name('admin.products.')->group(function () {
+        Route::prefix('products')->name('products.')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('index');
             Route::get('/create', [ProductController::class, 'create'])->name('create');
             Route::post('/store', [ProductController::class, 'store'])->name('store');
-            Route::get('/{id}', [ProductController::class, 'show'])->name('show');
-            Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [ProductController::class, 'update'])->name('update');
-            Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
+            Route::get('/{product}', [ProductController::class, 'show'])->name('show');
+            Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
+            Route::put('/{product}', [ProductController::class, 'update'])->name('update');
+            Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
         });
     });
 
