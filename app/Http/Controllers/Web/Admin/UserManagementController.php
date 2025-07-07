@@ -56,7 +56,7 @@ class UserManagementController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'lokasi' => ['nullable', 'string', 'max:255'],
-            'nomor_telepon' => ['nullable', 'string', 'max:20'],
+            'phone_number' => ['nullable', 'string', 'max:20'],
             'role' => ['required', 'string', 'in:admin,petani,pembeli'],
         ]);
 
@@ -66,7 +66,7 @@ class UserManagementController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password), // Password di-hash demi keamanan
             'lokasi' => $request->lokasi,
-            'nomor_telepon' => $request->nomor_telepon,
+            'phone_number' => $request->phone_number,
             'role' => $request->role,
         ]);
 
@@ -103,7 +103,7 @@ class UserManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'lokasi' => ['nullable', 'string', 'max:255'],
-            'nomor_telepon' => ['nullable', 'string', 'max:20'],
+            'phone_number' => ['nullable', 'string', 'max:20'],
             'role' => ['required', 'in:admin,petani,pembeli'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -113,7 +113,7 @@ class UserManagementController extends Controller
         $user->email = $request->email;
         $user->role = $request->role;
         $user->lokasi = $request->lokasi;
-        $user->nomor_telepon = $request->nomor_telepon;
+        $user->phone_number = $request->phone_number;
 
         // Jika password diisi, maka update passwordnya
         if ($request->filled('password')) {

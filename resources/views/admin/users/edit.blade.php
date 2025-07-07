@@ -49,9 +49,9 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="nomor_telepon" class="form-label fw-semibold">Nomor Telepon</label>
-                                    <input type="text" name="nomor_telepon" id="nomor_telepon" class="form-control @error('nomor_telepon') is-invalid @enderror" value="{{ old('nomor_telepon', $user->nomor_telepon) }}">
-                                     @error('nomor_telepon')
+                                    <label for="phone_number" class="form-label fw-semibold">Nomor Telepon</label>
+                                    <input type="text" name="phone_number" id="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number', $user->phone_number) }}">
+                                     @error('phone_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>

@@ -196,9 +196,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="nomor_telepon" class="form-label fw-semibold">Nomor Telepon</label>
-                                <input type="text" class="form-control @error('nomor_telepon') is-invalid @enderror" id="nomor_telepon" name="nomor_telepon" value="{{ old('nomor_telepon') }}" placeholder="Contoh: 08123456789">
-                                @error('nomor_telepon')
+                                <label for="phone_number" class="form-label fw-semibold">Nomor Telepon</label>
+                                <input type="text" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" placeholder="Contoh: 08123456789">
+                                @error('phone_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
