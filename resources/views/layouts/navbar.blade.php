@@ -3,16 +3,20 @@
     $user = Auth::user();
 @endphp
 
-<div class="topbar d-flex justify-content-between align-items-center px-4 py-3 mb-4"
+<div class="topbar d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center px-4 py-3 mb-4 flex-wrap gap-3"
     style="background: #ffffff; border-radius: 12px; box-shadow: 0 2px 10px rgba(107, 175, 84, 0.08);">
-    <div>
-        <h5 class="mb-0" style="font-weight: 600; color: #4c8d3d;">
+
+    <!-- Kiri (Salam) -->
+    <div class="text-start text-md-left">
+        <h5 class="mb-1" style="font-weight: 600; color: #4c8d3d;">
             👋 Selamat Datang, {{ $user ? $user->name : 'Admin' }}
         </h5>
         <small style="color: #7c9f7c;">Semoga harimu menyenangkan 🌾</small>
     </div>
 
-    <div class="d-flex align-items-center gap-3">
+    <!-- Kanan (Profil + Logout) -->
+    <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-3 ms-auto">
+
         <div class="d-flex align-items-center gap-2">
             <img src="https://img.icons8.com/ios-glyphs/36/6baf54/user-male-circle.png" alt="Admin" width="32"
                 height="32" style="border-radius: 50%;">
@@ -31,5 +35,6 @@
                 <i class="fas fa-sign-out-alt me-1"></i> Logout
             </button>
         </form>
+
     </div>
 </div>
